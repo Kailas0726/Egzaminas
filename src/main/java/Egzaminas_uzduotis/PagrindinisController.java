@@ -23,6 +23,9 @@ public class PagrindinisController {
 	@Autowired
 	private FilmuKategorijosRepository filmu_kategorijos_repository;
 	
+	@Autowired
+	private FilmaiRepository filmai_repository; 
+	
 	@RequestMapping(path="/pagrindinis", method={ RequestMethod.GET, RequestMethod.POST })
     public String pagrindinis(Model model) {
 		
@@ -106,6 +109,79 @@ public class PagrindinisController {
 			
 		}
 		return "redirect:prideti_filmu_kategorija";
+	}
+	
+	@RequestMapping(path="/filmu_pridejimas")
+    public String filmu_pridejimas(@RequestParam(name="i", required=true, defaultValue="0") String id 
+			, @RequestParam(name="prideti", required=false, defaultValue="neprideti") String prideti
+			, @RequestParam(name="zanrai", required=false, defaultValue="") String zanrai
+			, @RequestParam(name="pavadinimas", required=false, defaultValue="") String pavadinimas
+			, @RequestParam(name="aprasas", required=false, defaultValue="") String aprasas
+			, @RequestParam(name="imdb", required=false, defaultValue="") String imdb
+			, Model model) {
+		
+
+		
+		
+		if(prideti.equals("prideti")) {
+			
+			Filmai filmai = new Filmai(id, zanrai, pavadinimas, aprasas, imdb);
+			filmai_repository.save(filmai);
+			return "redirect:filmu_pridejimas" ;
+			
+		}
+		
+		model.addAttribute("filmai", filmai_repository.findAll());
+		model.addAttribute("zanrai", filmu_kategorijos_repository.findAll());
+			
+		return "filmu_pridejimas";
+	}
+	
+	@RequestMapping(path="/salinti-filmas")
+    public String SalintiFilmas(@RequestParam(name="filmas_id", required=true, defaultValue="0") String id
+    		//, @RequestParam(name="filmai_id", required=false, defaultValue="0") String filmai_id
+			, @RequestParam(name="salinti", required=false, defaultValue="0") String salinti
+			, Model model) {
+		try
+		{
+		
+		Integer id1 = Integer.parseInt(id);
+		Optional <Filmai> found = filmai_repository.findById(id1);
+			if(salinti.equals("salinti")) {
+				
+				if(found.isPresent()) {
+					
+					Filmai filmai = found.get();
+					filmai_repository.deleteById(id1);
+					
+				}
+				
+			}
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+		
+		return "redirect:filmu_pridejimas" ;
+	}
+	
+	@RequestMapping(path="/filmu_ieskojimas", method={ RequestMethod.GET, RequestMethod.POST })
+    public String filmu_ieskojimas(Model model, String keyword) {
+			
+		if(keyword != null) {
+			
+			model.addAttribute("filmai", filmai_repository.findByKeyword(keyword) );
+			
+		}else {
+		
+			model.addAttribute("filmai", filmai_repository.findAll());
+		
+		}
+			
+			return "filmu_ieskojimas";
+			
 	}
 	
 }

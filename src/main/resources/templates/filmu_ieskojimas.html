@@ -2,7 +2,7 @@
  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-    <title>Pagrindinis</title>
+    <title>Ieskoti filma</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -119,6 +119,26 @@
             position: relative;
             top: 300px;
         }
+        
+        table{
+		
+			border-collapse: collapse;
+		
+		}
+		
+		th, td{
+		
+			border: 1px solid red;
+			padding: 8px;
+		
+		}
+		
+		#content{
+				
+			width: 300px;
+			margin: 30px auto;
+					
+		}
     
     </style>
 </head>
@@ -146,6 +166,7 @@
      <div class="navbar">
      
      	  <a th:href="@{/pagrindinis}">Pagrindinis puslapis</a>
+     	  <a th:href="@{/filmu_ieskojimas}">Ieskoti filmu</a>
      	  
      	   <div sec:authorize="isAuthenticated()">
      	   
@@ -154,16 +175,35 @@
      	   
      	   </div>
 		  
-		   <a th:href="@{/filmu_ieskojimas}">Ieskoti filmu</a>
 
+	</div>
+	
+	<div id="content">
+	
+		<form th:action="@{/filmu_ieskojimas}" method="get">
+			<input id="txtSearch" type="text" name="keyword">
+			<button type="submit">Ieškoti</button>
+		</form>
+		
+		<table>
+				<tr>
+					<th>Zanras</th>
+					<th>Pavadinimas</th>
+					<th>Aprasas</th>
+					<th>Reitingas</th>
+				</tr>
+				<tr th:each="filmai : ${filmai}">
+						<td th:text="${filmai.getFilmu_kategorijos().getPavadinimas()}"></td>
+						<td th:text="${filmai.getPavadinimas()}"></td>
+						<td th:text="${filmai.getAprasas()}"></td>
+						<td th:text="${filmai.getImdb_reitingas()}"></td>
+				</tr>
+		</table>
 	</div>
 	
 	<div sec:authorize="!isAuthenticated()">
 		<h1 id="centras">Noredami pasiekti daugiau funkciju turite uzsiregistruoti arba prisijungti</h1>
 	</div>
 	
-	 <div sec:authorize="isAuthenticated()">
-	 	<h1 id="centras">Sveiki prisijunge!</h1>
-	 </div>
 </body>
 </html>

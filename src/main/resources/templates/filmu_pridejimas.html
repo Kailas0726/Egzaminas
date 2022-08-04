@@ -155,7 +155,7 @@
 			      width: 350,
 			      modal: true,
 			      buttons: {
-				"Zanro pridejimas": addVartotojas,
+				"Filmo pridejimas": addVartotojas,
 				Cancel: function() {
 				dialog.dialog( "close" );
 				}
@@ -169,7 +169,7 @@
 			});
 			
 			
-			$( ".edit" ).each ( function() {
+			/*$( ".edit" ).each ( function() {
 		    
 		    	$( this ).button().click ( function() {
 		    	
@@ -194,39 +194,38 @@
 		    		
 		    	});	
 		    			    
-		     });
+		     });*/
 		     
-		     
-		     del_dialog = $( "#dialog-confirm" ).dialog({
-	
-				      autoOpen: false,
-				      resizable: false,
-				      height: "auto",
-				      width: 400,
-				      modal: true,
-				      buttons: {
-					"Pašalinti": function() {
-						$( this ).dialog( "close" );
-						$( '#salinimo_forma' ).submit();
-				          },
-					Cancel: function() {
-						$( this ).dialog( "close" );
-					}
-				      }
-				});
+			del_dialog = $( "#dialog-confirm" ).dialog({
 				
-				$( '.delete' ).button().on ( 'click', function() {
-					id_iraso = $( this ).data( 'id' );
-					//console.log(id_iraso);
-					$( '#id_iraso' ).val ( id_iraso );
-					del_dialog.dialog( "open" );
-			   });
-	
-	
-
-				
-
+			      autoOpen: false,
+			      resizable: false,
+			      height: "auto",
+			      width: 400,
+			      modal: true,
+			      buttons: {
+				"Pašalinti": function() {
+					$( this ).dialog( "close" );
+					$( '#salinimo_forma' ).submit();
+			          },
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			      }
+			});
+			
+			$( '.delete' ).button().on ( 'click', function() {
+				veiklos_id = $( this ).data( 'id' );
+				$( '#filmas_id' ).val ( veiklos_id );
+				del_dialog.dialog( "open" );
+			});
+			
 		});
+	
+
+				
+
+		
   		
   	</script>
 </head>
@@ -263,35 +262,58 @@
 	
 		<table>
 			<tr>
-				<th>Filmo kategorijos pavadinimas</th>
-				<th>Redagavimas</th>
+				<th>Zanras</th>
+				<th>Pavadinimas</th>
+				<th>Aprasas</th>
+				<th>Reitingas</th>
 				<th>Salinimas</th>
 			</tr>
-			<tr th:each="filmu_kategorijos : ${filmu_kategorijos}">
-					<td th:text="${filmu_kategorijos.getPavadinimas()}"></td>
-					<td><button class="edit" th:attr="data-id=${filmu_kategorijos.getId()}" value="redaguoti">Redaguoti</button></td>
-					<td><button class="delete" th:attr="data-id=${filmu_kategorijos.getId()}">Šalinti</button></td>
+			<tr th:each="filmai : ${filmai}">
+					<td th:text="${filmai.getFilmu_kategorijos().getPavadinimas()}"></td>
+					<td th:text="${filmai.getPavadinimas()}"></td>
+					<td th:text="${filmai.getAprasas()}"></td>
+					<td th:text="${filmai.getImdb_reitingas()}"></td>
+					<td><button class="delete" th:attr="data-id=${filmai.getId()}">Šalinti</button></td>
 			</tr>
 		</table>
 		
 		<div id="pridejimas">
 			<form method="post" action="">
-				<label for="pavadinimas"><br> Zanro pavadinimas: <br></label>
+				<label for="zanrai"><br> Pasirinkti filmo zanra: <br></label>
+					<select name="zanrai" id="zanrai" >
+						<option th:each="zanrai : ${zanrai}" th:value="${zanrai.getId()}" th:text="${zanrai.getPavadinimas()}"></option>
+					</select>
+			
+				<label for="pavadinimas"><br> pavadinimas: <br></label>
 				<input type="text" name="pavadinimas" id="pavadinimas" value="">
+				
+				<label for="aprasas"><br> aprasas: <br></label>
+				<input type="text" name="aprasas" id="aprasas" value="">
+				
+				<label for="imdb"><br> IMDB reitingas: <br></label>
+				<input type="text" name="imdb" id="imdb" value="">
+				
+				
 				<input type="hidden" id="id" name="id" value="0">
 				<input type="hidden" id="prideti" name="prideti" value="prideti">
 			</form>
 		</div>
 		
 		<div id="dialog-confirm" title="Pasirinktų duomenų šalinimas">
-			<p>Ar tikrai norite ištrinti pasirinktus duomenis?</p>
-			<form id="salinimo_forma" method="post" action="/salinimas">
-					<input type="hidden" name="salinti" id="salinti" value="salinti">
-					<input type="hidden" name="id_iraso" id="id_iraso" value="0">	
-			</form>
+				<p>Ar tikrai norite ištrinti pasirinktus duomenis?</p>
+				
+				<form id="salinimo_forma" method="post" action="/salinti-filmas">
+				
+						<input type="hidden" name="salinti" id="salinti" value="salinti">
+						
+						<input type="hidden" name="filmas_id" id="filmas_id" value="0">
+						
+						<!--  <input type="hidden" name="filmai_id" id="filmai_id" th:value="${filmai.getId()}">-->
+				
+				</form>
 		</div>
 			
-		<button id="pridejimo_mygtukas">Pridėti filmo kategorija</button>
+		<button id="pridejimo_mygtukas">Pridėti filmus</button>
 		
 	</div>
 

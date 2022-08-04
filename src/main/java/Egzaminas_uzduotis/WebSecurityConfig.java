@@ -49,8 +49,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	http.csrf().disable();
         http.authorizeRequests()
             //.antMatchers("/user").authenticated()
-            .antMatchers("/ugdymo_istaiga").hasRole("ADMINISTRATORIUS")
-            .antMatchers("/paraisku_tvarkymas").hasRole("ADMINISTRATORIUS")
+            //.antMatchers("/ugdymo_istaiga").hasRole("ADMINISTRATORIUS")
+            //.antMatchers("/paraisku_tvarkymas").hasRole("ADMINISTRATORIUS")
             .anyRequest().permitAll()
             .and()
             .formLogin()
