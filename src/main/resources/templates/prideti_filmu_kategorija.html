@@ -1,0 +1,304 @@
+<html>
+<head>
+	<title>Filmo kategoriju pridejimas</title>
+	
+	<meta charset="utf-8">
+	
+	<style>
+	
+		table{
+		
+			border-collapse: collapse;
+		
+		}
+		
+		th, td{
+		
+			border: 1px solid red;
+			padding: 8px;
+		
+		}
+		
+		#content{
+				
+			width: 300px;
+			margin: 30px auto;
+					
+		}
+		
+		#top-bar{
+		
+		   width: 1280px;
+	       margin: 0 auto;
+	       height: 70px;
+	       background-color: black;
+		
+	    }
+		
+	   	body {
+	   
+           margin: 0;
+           padding: 0;
+        }
+        
+        #registruotis{
+        
+        	position: relative;
+        	left: 1700px;
+        	top: 25px;
+        	font-family: Fantasy;
+        
+        }
+        
+        #registruotis a{
+        
+        	text-decoration: none;
+        	color: white;
+        
+        }
+        
+        #registruotis a:hover{
+        
+        	text-decoration: underline;
+        	text-decoration-thickness: 3px;
+        	text-underline-offset: 5px;
+        
+        }
+        
+        #prisijungti{
+        
+        	position: relative;
+        	left: 1650px;
+        	top: 24px;
+        	font-family: Fantasy;
+        
+        }
+        
+        #prisijungti a{
+        
+        	text-decoration: none;
+        	color: white;
+        
+        }
+        
+        #prisijungti a:hover{
+        
+        	text-decoration: underline;
+        	text-decoration-thickness: 3px;
+        	text-underline-offset: 5px;
+        
+        }
+        
+        #atsijungti{
+        	
+        	position: relative;
+        	left: 1100px;
+        	top: 24px;
+        
+        }
+        
+        #vardas{
+        
+        	position: relative;
+        	color: white;
+        	left: 800px;
+        	top: 24px;
+        	
+        
+        }
+        
+        
+        .navbar {
+        
+			overflow: hidden;
+			background-color: #333; 
+			  
+		}
+
+		.navbar a {
+		
+			float: left;
+			font-size: 16px;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+		  
+		}
+		
+        .navbar a:hover, .subnav:hover .subnavbtn {
+        
+		    background-color: red;
+		  
+		}
+
+			
+	</style>
+	
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+  	
+  	<script>
+  		$(document).ready(function(){
+			var dialog, form;
+			
+			function addVartotojas() {
+			
+				form.submit();
+			}
+			
+			dialog = $( "#pridejimas" ).dialog({
+			      autoOpen: false,
+			      height: 400,
+			      width: 350,
+			      modal: true,
+			      buttons: {
+				"Zanro pridejimas": addVartotojas,
+				Cancel: function() {
+				dialog.dialog( "close" );
+				}
+			     }
+			});
+			
+			form = dialog.find( "form" );
+			
+			$( "#pridejimo_mygtukas" ).button().on( "click", function() {
+			      dialog.dialog( "open" );
+			});
+			
+			
+			$( ".edit" ).each ( function() {
+		    
+		    	$( this ).button().click ( function() {
+		    	
+		    		id_zanro = $( this ).data ( 'id' );
+		    		
+					$.ajax({
+						 method: 'POST'
+				 		 , url: '/redagavimas'
+				 		 , data: {
+				 		 	id: id_zanro
+				 		 }
+					}).done( function( data ) {
+						
+						if ( data != null ) {
+						
+							$( '#pavadinimas' ).val ( data.pavadinimas );		
+							$( '#id').val ( data.id );
+		      				dialog.dialog( "open" );							
+						}
+
+				  	});			    		
+		    		
+		    	});	
+		    			    
+		     });
+		     
+		     
+		     del_dialog = $( "#dialog-confirm" ).dialog({
+	
+				      autoOpen: false,
+				      resizable: false,
+				      height: "auto",
+				      width: 400,
+				      modal: true,
+				      buttons: {
+					"Pašalinti": function() {
+						$( this ).dialog( "close" );
+						$( '#salinimo_forma' ).submit();
+				          },
+					Cancel: function() {
+						$( this ).dialog( "close" );
+					}
+				      }
+				});
+				
+				$( '.delete' ).button().on ( 'click', function() {
+					id_iraso = $( this ).data( 'id' );
+					//console.log(id_iraso);
+					$( '#id_iraso' ).val ( id_iraso );
+					del_dialog.dialog( "open" );
+			   });
+	
+	
+
+				
+
+		});
+  		
+  	</script>
+</head>
+
+<body>
+
+	<div id="top-bar">
+	
+		<div sec:authorize="!isAuthenticated()">
+			<span id="prisijungti"><a th:href="@{/login}">Prisijungti</a></span>
+			
+		    <span id="registruotis"><a th:href="@{/register}">Registruotis</a></span>
+	    </div>
+	    
+	    <div sec:authorize="isAuthenticated()">
+			<form th:action="@{/logout}" method="post">
+					
+		           <input id="atsijungti" type="submit" value="Atsijungti" />
+		            
+				   <span id="vardas" th:if="${#request != null}" th:text="${#request.userPrincipal.principal.getUsername()}"></span>
+		            
+		    </form>
+	    </div>
+	</div>
+	
+     <div class="navbar">
+     	  <a th:href="@{/pagrindinis}">Pagrindinis puslapis</a>
+		  <a th:href="@{/prideti_filmu_kategorija}">Prideti filmu kategorija</a>
+	</div>
+
+	<div id="content">
+	
+		<table>
+			<tr>
+				<th>Filmo kategorijos pavadinimas</th>
+				<th>Redagavimas</th>
+				<th>Salinimas</th>
+			</tr>
+			<tr th:each="filmu_kategorijos : ${filmu_kategorijos}">
+					<td th:text="${filmu_kategorijos.getPavadinimas()}"></td>
+					<td><button class="edit" th:attr="data-id=${filmu_kategorijos.getId()}" value="redaguoti">Redaguoti</button></td>
+					<td><button class="delete" th:attr="data-id=${filmu_kategorijos.getId()}">Šalinti</button></td>
+			</tr>
+		</table>
+		
+		<div id="pridejimas">
+			<form method="post" action="">
+				<label for="pavadinimas"><br> Zanro pavadinimas: <br></label>
+				<input type="text" name="pavadinimas" id="pavadinimas" value="">
+				<input type="hidden" id="id" name="id" value="0">
+				<input type="hidden" id="prideti" name="prideti" value="prideti">
+			</form>
+		</div>
+		
+		<div id="dialog-confirm" title="Pasirinktų duomenų šalinimas">
+			<p>Ar tikrai norite ištrinti pasirinktus duomenis?</p>
+			<form id="salinimo_forma" method="post" action="/salinimas">
+					<input type="hidden" name="salinti" id="salinti" value="salinti">
+					<input type="hidden" name="id_iraso" id="id_iraso" value="0">	
+			</form>
+		</div>
+			
+		<button id="pridejimo_mygtukas">Pridėti filmo kategorija</button>
+		
+	</div>
+
+</body>
+
+
+
+
+
+
+
+</html>
