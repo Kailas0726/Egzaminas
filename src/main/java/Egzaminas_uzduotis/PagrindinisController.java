@@ -184,4 +184,32 @@ public class PagrindinisController {
 			
 	}
 	
+	@RequestMapping(path="/kategorijos_filmai", method={ RequestMethod.GET, RequestMethod.POST })
+    public String kategorijos_filmai(Model model) {
+			
+			model.addAttribute("zanrai", filmu_kategorijos_repository.findAll());
+		
+			return "kategorijos_filmai";
+			
+	}
+	
+	@RequestMapping(path="/filmai", method={ RequestMethod.GET, RequestMethod.POST })
+    public String filmai(@RequestParam(name="i", required=true, defaultValue="0") String id
+			 , Model model) {
+		
+		Optional<Filmai> filmai1 = filmai_repository.findById(Integer.parseInt(id));
+		Filmai filmai = null;
+		if(!filmai1.isEmpty()) {
+			
+			filmai = filmai1.get();
+			
+		}
+		
+		model.addAttribute("filmai", filmai);
+		//model.addAttribute("filmai", filmai_repository.findAll());
+		
+		return "filmai";
+			
+	}
+	
 }

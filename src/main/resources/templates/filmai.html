@@ -180,21 +180,15 @@
 	</div>
 	
 	<div id="content">
-	
-		<form th:action="@{/filmu_ieskojimas}" method="get">
-			<input id="txtSearch" type="text" name="keyword">
-			<button type="submit">Ieškoti</button>
-		</form>
 		
 		<table>
 				<tr>
-					<th>Zanras</th>
 					<th>Pavadinimas</th>
 					<th>Aprasas</th>
 					<th>Reitingas</th>
 				</tr>
 				<tr th:each="filmai : ${filmai}">
-						<td th:text="${filmai.getFilmu_kategorijos().getPavadinimas()}"></td>
+						<!--  <td th:text="${filmai.getPavadinimas()}"></td>-->
 						<td th:text="${filmai.getPavadinimas()}"></td>
 						<td th:text="${filmai.getAprasas()}"></td>
 						<td th:text="${filmai.getImdb_reitingas()}"></td>

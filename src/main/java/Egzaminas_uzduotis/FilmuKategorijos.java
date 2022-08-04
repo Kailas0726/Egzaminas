@@ -8,7 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 
@@ -20,10 +23,23 @@ public class FilmuKategorijos {
 	private Integer id;
 	private String pavadinimas;
 	
+	@JsonIgnore
+	@OneToMany//(cascade = CascadeType.ALL)
+	@JoinColumn(name="kategorijos_id", referencedColumnName="id",insertable=false, updatable=false)
+	private List<Filmai> filmai;
+	
 	public FilmuKategorijos() {
 		
 		super();
 		
+	}
+
+	public List<Filmai> getFilmai() {
+		return filmai;
+	}
+
+	public void setFilmai(List<Filmai> filmai) {
+		this.filmai = filmai;
 	}
 
 	public Integer getId() {

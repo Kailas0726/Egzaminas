@@ -180,26 +180,19 @@
 	</div>
 	
 	<div id="content">
-	
-		<form th:action="@{/filmu_ieskojimas}" method="get">
-			<input id="txtSearch" type="text" name="keyword">
-			<button type="submit">Ieškoti</button>
-		</form>
 		
+	
 		<table>
-				<tr>
-					<th>Zanras</th>
-					<th>Pavadinimas</th>
-					<th>Aprasas</th>
-					<th>Reitingas</th>
-				</tr>
-				<tr th:each="filmai : ${filmai}">
-						<td th:text="${filmai.getFilmu_kategorijos().getPavadinimas()}"></td>
-						<td th:text="${filmai.getPavadinimas()}"></td>
-						<td th:text="${filmai.getAprasas()}"></td>
-						<td th:text="${filmai.getImdb_reitingas()}"></td>
-				</tr>
+			<tr>
+				<th>Filmo kategorijos pavadinimas</th>
+				<th>Filmai pagal zanra</th>
+			</tr>
+			<tr th:each="zanrai : ${zanrai}">
+					<td th:text="${zanrai.getPavadinimas()}"></td>
+					<td><a id="linkas1" th:href=@{filmai(i=${zanrai.getId()})}><button class="view">Peržiūrėti filmus</button></a></td>
+			</tr>
 		</table>
+
 	</div>
 	
 	<div sec:authorize="!isAuthenticated()">
